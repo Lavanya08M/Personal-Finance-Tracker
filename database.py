@@ -1,6 +1,7 @@
 import sqlite3 # Built-in module to interact with SQLite database
 
 # SQL Statements
+
 CREATE_TABLE_TRANSACTIONS = """
 CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 ADD_TRANSACTION = """
 INSERT INTO transactions (date, type, category, amount, payment_method, recurring)
 VALUES
-(?, ?, ?, ?, ?, ?, ?);
+(?, ?, ?, ?, ?, ?);
 """
 
 FETCH_TRANSACTIONS_DATA = """
@@ -30,13 +31,13 @@ ORDER BY date;
 
 
 FILTER_TRANSACTIONS_TO_ANALYSE_MONTHLY_AMOUNT = """
-SELECT STRFTIME('%m-%Y', date) AS transaction_month_year, type, category, SUM(amount) AS total_amount
+SELECT STRFTIME('%m-%Y', date) AS transaction_month_year, type, category, ROUND(SUM(amount), 2) AS total_amount
 FROM transactions
 GROUP BY transaction_month_year, type, category;
 """
 
 FILTER_TRANSACTIONS_AMOUNT_FOR_GIVEN_TYPE = """
-SELECT type, SUM(amount) AS total_amount
+SELECT type, ROUND(SUM(amount), 2) AS total_amount
 FROM transactions
 WHERE type = ?;
 """
@@ -58,13 +59,17 @@ def insert_many_transactions(connection, transaction_data):
     with connection:
         connection.executemany(ADD_TRANSACTION, transaction_data)
 
+def see_all_data(connection):
+    with connection:
+        return connection.execute(FETCH_TRANSACTIONS_DATA).fetchall()
+
 def analyze_monthly_amount(connection):
     with connection:
         return connection.execute(FILTER_TRANSACTIONS_TO_ANALYSE_MONTHLY_AMOUNT).fetchall()
 
-def analyze_total_amount_by_type(connection, type):
+def analyze_total_amount_by_type(connection, type1):
     with connection:
-        return connection.execute(FILTER_TRANSACTIONS_AMOUNT_FOR_GIVEN_TYPE, (type,)).fetchall()
+        return connection.execute(FILTER_TRANSACTIONS_AMOUNT_FOR_GIVEN_TYPE, (type1,)).fetchall()
 
 
 
