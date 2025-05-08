@@ -1,0 +1,14 @@
+# Core library for database connection (standard with Python)
+sqlite3 ; included with Python
+
+# For data handling and manipulation (optional but helpful)
+pandas==2.2.2
+
+# For data visualization (optional)
+matplotlib==3.8.4
+
+# For building a GUI (optional)
+tkinter ; included with Python
+
+# For date handling and formatting (optional)
+python-dateutil==2.9.0.post0
