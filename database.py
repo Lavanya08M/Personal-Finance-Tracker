@@ -6,16 +6,15 @@ CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT NOT NULL,
     type TEXT NOT NULL CHECK(type IN ('Income', 'Expense')),
-    category TEXT NOT NULL,
+    category TEXT NOT NULL CHECK(category IN ('Groceries', 'Dining Out', 'Rent/Mortgage', 'Utilities', 'Internet', 'Phone', 'Transportation', 'Insurance', 'Healthcare', 'Education', 'Childcare', 'Entertainment', 'Shopping', 'Travel', 'Debt Repayment', 'Subscriptions', 'Gifts/Donations')),
     amount REAL NOT NULL CHECK(amount>=0),
-    notes TEXT,
     payment_method TEXT NOT NULL CHECK(payment_method IN ('Cash', 'Credit Card', 'Debit Card', 'Bank Transfer', 'Other')),
     recurring INTEGER NOT NULL DEFAULT 0 CHECK(recurring IN (0, 1))
 );
 """
 
 ADD_TRANSACTION = """
-INSERT INTO transactions (date, type, category, amount, notes, payment_method, recurring)
+INSERT INTO transactions (date, type, category, amount, payment_method, recurring)
 VALUES
 (?, ?, ?, ?, ?, ?, ?);
 """
