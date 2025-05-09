@@ -7,20 +7,26 @@ CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT NOT NULL,
     type TEXT NOT NULL CHECK(type IN ('Income', 'Expense')),
-    category TEXT NOT NULL CHECK(category IN ('Groceries', 'Dining Out', 'Rent/Mortgage', 'Utilities', 'Internet', 'Phone', 'Transportation', 'Insurance', 'Healthcare', 'Education', 'Childcare', 'Entertainment', 'Shopping', 'Travel', 'Debt Repayment', 'Subscriptions', 'Gifts/Donations')),
+    category TEXT NOT NULL CHECK(category IN (
+        'Groceries', 'Dining Out', 'Rent/Mortgage', 'Utilities', 'Internet', 
+        'Phone', 'Transportation', 'Insurance', 'Healthcare', 'Education', 
+        'Childcare', 'Entertainment', 'Shopping', 'Travel', 'Debt Repayment', 
+        'Subscriptions', 'Gifts/Donations'
+        )),
     amount REAL NOT NULL CHECK(amount>=0),
-    payment_method TEXT NOT NULL CHECK(payment_method IN ('Cash', 'Credit Card', 'Debit Card', 'Bank Transfer', 'Other')),
+    payment_method TEXT NOT NULL CHECK(payment_method IN (
+        'Cash', 'Credit Card', 'Debit Card', 'Bank Transfer', 'Other'
+        )),
     recurring INTEGER NOT NULL DEFAULT 0 CHECK(recurring IN (0, 1))
 );
 """
 
-ADD_TRANSACTION = """
+INSERT_TRANSACTION = """
 INSERT INTO transactions (date, type, category, amount, payment_method, recurring)
-VALUES
-(?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?);
 """
 
-FETCH_TRANSACTIONS_DATA = """
+FETCH_ALL_TRANSACTIONS = """
 SELECT * FROM transactions;
 """
 
@@ -42,6 +48,10 @@ FROM transactions
 WHERE type = ?;
 """
 
+# ----------------------------------------
+# Database Functions
+# ----------------------------------------
+
 # Connect to the database (creates database if it doesn't exist)
 def connect():
     return sqlite3.connect("finance.db")
@@ -53,15 +63,15 @@ def create_transaction_table(connection):
 
 def insert_transaction(connection, transaction_data):
     with connection:
-        connection.execute(ADD_TRANSACTION, transaction_data)
+        connection.execute(INSERT_TRANSACTION, transaction_data)
 
 def insert_many_transactions(connection, transaction_data):
     with connection:
-        connection.executemany(ADD_TRANSACTION, transaction_data)
+        connection.executemany(INSERT_TRANSACTION, transaction_data)
 
 def see_all_data(connection):
     with connection:
-        return connection.execute(FETCH_TRANSACTIONS_DATA).fetchall()
+        return connection.execute(FETCH_ALL_TRANSACTIONS).fetchall()
 
 def analyze_monthly_amount(connection):
     with connection:
