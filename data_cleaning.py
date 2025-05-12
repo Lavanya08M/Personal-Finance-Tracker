@@ -18,12 +18,26 @@ def clean_transactions_data(data):
     data['amount'] = pd.to_numeric(data['amount'], errors='coerce')
     data = data[data['amount'] >= 0]
 
-    # Convert 'type', 'category', 'payment_method' to category type
-    text_cols = ['type', 'category', 'payment_method']
-    for col in text_cols:
-        data[col] = data[col].astype('category')
     
     data.to_csv('cleaned_transaction_data.csv', index=False)
+
+    dtypes = {
+        'id': 'int64',
+        'type': 'category',
+        'category_type': 'category',
+        'amount': 'float64',
+        'payment_method': 'category',
+        'recurring': 'category'
+    }
+
+    df_cleaned = pd.read_csv('cleaned_transaction_data.csv', dtype=dtypes, parse_dates=['date'])
+
+    cols = ['type', 'category_type', 'payment_method', 'recurring']
+
+    for col in cols:
+        df_cleaned[col] = df_cleaned[col].astype('category')
+    
+    return df_cleaned
     
 
 

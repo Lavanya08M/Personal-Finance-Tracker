@@ -48,7 +48,9 @@ def main():
             handle_data_insights()
         elif user_input == 4:
             trans_data = data_analysis.csv_to_dataframe()
-            data_cleaning.clean_transactions_data(trans_data)
+            cleaned_data = data_cleaning.clean_transactions_data(trans_data)
+            print(cleaned_data.info())
+            print(cleaned_data['recurring'].unique())
         elif user_input == 5:
             sys.exit()
         else:
@@ -100,7 +102,7 @@ def handle_data_insights():
 def export_to_csv(file_name, transactions):
     with open(file_name, 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(['id', 'date', 'type', 'category', 'amount', 'payment_method', 'recurring'])
+        csv_writer.writerow(['id', 'date', 'type', 'category_type', 'amount', 'payment_method', 'recurring'])
         csv_writer.writerows(transactions)
     
 

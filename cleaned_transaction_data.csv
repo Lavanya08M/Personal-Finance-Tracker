@@ -1,4 +1,4 @@
-id,date,type,category,amount,payment_method,recurring
+id,date,type,category_type,amount,payment_method,recurring
 1,2020-01-18,Income,Internet,1124.92,Credit Card,1
 2,2020-06-20,Expense,Phone,411.2373474316,Other,0
 3,2020-04-19,Income,Gifts/Donations,1484.973,Debit Card,0
